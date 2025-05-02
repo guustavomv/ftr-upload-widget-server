@@ -5,9 +5,9 @@ import { fakerPT_BR as faker } from '@faker-js/faker'
 import type { InferInsertModel } from 'drizzle-orm'
 
 export async function makeUpload(
-  overrrides?: Partial<InferInsertModel<typeof schema.uploads>>
+  overrides?: Partial<InferInsertModel<typeof schema.uploads>>
 ) {
-  const fileName = faker.system.fileName()
+  const fileName = overrides?.name || faker.system.fileName()
 
   const result = await db
     .insert(schema.uploads)
@@ -15,7 +15,7 @@ export async function makeUpload(
       name: fileName,
       remoteKey: `images/${fileName}`,
       remoteUrl: `http://example.com/images/${fileName}`,
-      ...overrrides,
+      ...overrides,
     })
     .returning()
 

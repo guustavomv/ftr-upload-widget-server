@@ -3,7 +3,7 @@ import { schema } from '@/infra/db/schemas'
 import { type Either, makeRight } from '@/infra/shared/either'
 import { uploadFileToStorage } from '@/infra/storage/upload-file-to-storage'
 import { stringify } from 'csv-stringify'
-import { ilike } from 'drizzle-orm'
+import { asc, ilike } from 'drizzle-orm'
 import { PassThrough, Transform } from 'node:stream'
 import { pipeline } from 'node:stream/promises'
 import { z } from 'zod'
@@ -34,6 +34,7 @@ export async function exportUploads(
     .where(
       searchQuery ? ilike(schema.uploads.name, `%${searchQuery}%`) : undefined
     )
+    .orderBy(fields => asc(fields.id))
     .toSQL()
 
   const cursor = pg.unsafe(sql, params as string[]).cursor(2)
@@ -55,7 +56,7 @@ export async function exportUploads(
     cursor,
     new Transform({
       objectMode: true,
-      transform(chunks: unknown[], encoding, callback) {
+      transform(chunks: unknown[], _, callback) {
         for (const chunk of chunks) {
           this.push(chunk)
         }

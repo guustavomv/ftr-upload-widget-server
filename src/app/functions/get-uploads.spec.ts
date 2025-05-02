@@ -10,8 +10,8 @@ describe('Get uploads', () => {
     const namePattern = randomUUID()
 
     const uploads = await Promise.all(
-      Array.from({ length: 5 }).map(
-        async _ => await makeUpload({ name: `${namePattern}.webp` })
+      Array.from({ length: 5 }, async (_, i) =>
+        makeUpload({ name: `${namePattern}-${i}.webp` })
       )
     )
 
@@ -30,8 +30,8 @@ describe('Get uploads', () => {
     const namePattern = randomUUID()
 
     const uploads = await Promise.all(
-      Array.from({ length: 5 }).map(
-        async _ => await makeUpload({ name: `${namePattern}.webp` })
+      Array.from({ length: 5 }, async (_, i) =>
+        makeUpload({ name: `${namePattern}-${i}.webp` })
       )
     )
 
@@ -65,10 +65,10 @@ describe('Get uploads', () => {
 
     const uploads = await Promise.all(
       Array.from({ length: 5 }).map(
-        async (_, index) =>
+        async (_, i) =>
           await makeUpload({
-            name: `${namePattern}.webp`,
-            createdAt: dayjs().subtract(index, 'days').toDate(),
+            name: `${namePattern}-${i}.webp`,
+            createdAt: dayjs().subtract(i, 'days').toDate(),
           })
       )
     )

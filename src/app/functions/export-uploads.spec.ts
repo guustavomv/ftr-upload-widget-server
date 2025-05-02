@@ -7,22 +7,22 @@ import { describe, expect, it, vi } from 'vitest'
 
 describe('export uploads', () => {
   it('should be able to export uploads', async () => {
+    const namePattern = randomUUID()
+
     const uploadStub = vi
       .spyOn(upload, 'uploadFileToStorage')
       .mockImplementationOnce(async () => {
         return {
-          key: `${randomUUID()}.csv`,
+          key: `${namePattern}.csv`,
           url: 'http://example.com/file.csv',
         }
       })
 
-    const namePattern = randomUUID()
-
-    const upload1 = await makeUpload({ name: `${namePattern}.wep` })
-    const upload2 = await makeUpload({ name: `${namePattern}.wep` })
-    const upload3 = await makeUpload({ name: `${namePattern}.wep` })
-    const upload4 = await makeUpload({ name: `${namePattern}.wep` })
-    const upload5 = await makeUpload({ name: `${namePattern}.wep` })
+    const uploads = await Promise.all(
+      Array.from({ length: 5 }, async (_, i) =>
+        makeUpload({ name: `${namePattern}-${i}.webp` })
+      )
+    )
 
     const sut = await exportUploads({
       searchQuery: namePattern,
@@ -54,11 +54,12 @@ describe('export uploads', () => {
     expect(unwrapEither(sut).reportUrl).toBe('http://example.com/file.csv')
     expect(csvAsArray).toEqual([
       ['ID', 'Name', 'URL', 'Uploaded at'],
-      [upload1.id, upload1.name, upload1.remoteUrl, expect.any(String)],
-      [upload2.id, upload2.name, upload2.remoteUrl, expect.any(String)],
-      [upload3.id, upload3.name, upload3.remoteUrl, expect.any(String)],
-      [upload4.id, upload4.name, upload4.remoteUrl, expect.any(String)],
-      [upload5.id, upload5.name, upload5.remoteUrl, expect.any(String)],
+      ...uploads.map(upload => [
+        upload.id,
+        upload.name,
+        upload.remoteUrl,
+        expect.any(String),
+      ]),
     ])
   })
 })
