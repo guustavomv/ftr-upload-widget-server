@@ -11,4 +11,5 @@ const envSchema = z.object({
   CLOUDFLARE_PUBLIC_URL: z.string().url(),
 })
 
+console.log('olá')
 export const env = envSchema.parse(process.env)
