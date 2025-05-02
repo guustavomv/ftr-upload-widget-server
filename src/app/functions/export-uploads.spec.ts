@@ -1,7 +1,7 @@
 import { exportUploads } from '@/app/functions/export-uploads'
 import { isRight, unwrapEither } from '@/infra/shared/either'
 import * as upload from '@/infra/storage/upload-file-to-storage'
-import { makeUpload } from '@/test/factories/make-upload'
+import { makeUploads } from '@/test/factories/make-uploads'
 import { randomUUID } from 'node:crypto'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -18,11 +18,7 @@ describe('export uploads', () => {
         }
       })
 
-    const uploads = await Promise.all(
-      Array.from({ length: 5 }, async (_, i) =>
-        makeUpload({ name: `${namePattern}-${i}.webp` })
-      )
-    )
+    const uploads = await makeUploads(5, { name: `${namePattern}.webp` })
 
     const sut = await exportUploads({
       searchQuery: namePattern,

@@ -1,6 +1,5 @@
 import { isRight, unwrapEither } from '@/infra/shared/either'
-import { makeUpload } from '@/test/factories/make-upload'
-import dayjs from 'dayjs'
+import { makeUploads } from '@/test/factories/make-uploads'
 import { randomUUID } from 'node:crypto'
 import { describe, expect, it } from 'vitest'
 import { getUploads } from './get-uploads'
@@ -9,11 +8,7 @@ describe('Get uploads', () => {
   it('should be able to get the upalods', async () => {
     const namePattern = randomUUID()
 
-    const uploads = await Promise.all(
-      Array.from({ length: 5 }, async (_, i) =>
-        makeUpload({ name: `${namePattern}-${i}.webp` })
-      )
-    )
+    const uploads = await makeUploads(5, { name: `${namePattern}.webp` })
 
     const sut = await getUploads({
       searchQuery: namePattern,
@@ -29,11 +24,7 @@ describe('Get uploads', () => {
   it('should be able to get paginated the upalods', async () => {
     const namePattern = randomUUID()
 
-    const uploads = await Promise.all(
-      Array.from({ length: 5 }, async (_, i) =>
-        makeUpload({ name: `${namePattern}-${i}.webp` })
-      )
-    )
+    const uploads = await makeUploads(5, { name: `${namePattern}.webp` })
 
     let sut = await getUploads({
       searchQuery: namePattern,
@@ -63,15 +54,9 @@ describe('Get uploads', () => {
   it('should be able to get sorted the upalods', async () => {
     const namePattern = randomUUID()
 
-    const uploads = await Promise.all(
-      Array.from({ length: 5 }).map(
-        async (_, i) =>
-          await makeUpload({
-            name: `${namePattern}-${i}.webp`,
-            createdAt: dayjs().subtract(i, 'days').toDate(),
-          })
-      )
-    )
+    const uploads = await makeUploads(5, {
+      name: `${namePattern}.webp`,
+    })
 
     let sut = await getUploads({
       searchQuery: namePattern,
