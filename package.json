@@ -1,9 +1,9 @@
 {
   "name": "upload-server",
   "version": "1.0.0",
-  "type": "module",
+  "type": "commonjs",
   "description": "",
-  "main": "index.js",
+  "main": "src/infra/http/server.ts",
   "scripts": {
     "dev": "tsx watch --env-file .env src/infra/http/server.ts",
     "test": "dotenv -e .env.test -- vitest run",
@@ -14,7 +14,8 @@
     "db:migrate:test": "dotenv -e .env.test -- drizzle-kit migrate",
     "pretest": "npm run db:migrate:test",
     "pretest:watch": "npm run db:migrate:test",
-    "build": "tsup-node"
+    "build": "tsup",
+    "start": "node dist/infra/http/server.mjs"
   },
   "keywords": [],
   "author": "",
