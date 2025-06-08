@@ -27,6 +27,7 @@
     "@fastify/multipart": "^9.0.3",
     "@fastify/swagger": "^9.5.0",
     "@fastify/swagger-ui": "^5.2.2",
+    "@t3-oss/env-core": "^0.13.6",
     "csv-stringify": "^6.5.2",
     "dayjs": "^1.11.13",
     "drizzle-orm": "^0.43.1",
@@ -34,7 +35,7 @@
     "fastify-type-provider-zod": "^4.0.2",
     "postgres": "^3.4.5",
     "uuidv7": "^1.0.2",
-    "zod": "^3.24.3"
+    "zod": "^3.25.56"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
